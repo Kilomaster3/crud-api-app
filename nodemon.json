@@ -3,7 +3,6 @@
   "ext": ".ts,.js",
   "ignore": ["*.test.ts"],
   "execMap": {
-    "ts": "ts-node --esm"
-  },
-  "start:dev": "npx nodemon",
+      "ts": "ts-node --esm"
+  }
 }

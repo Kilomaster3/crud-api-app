@@ -4,14 +4,12 @@
   "description": "Task: CRUD API",
   "main": "index.js",
   "scripts": {
-    "start": "node app.ts",
-    "dev": "nodemon app.ts",
+    "start:dev": "nodemon app.ts",
     "develop": "webpack-dev-server --mode development",
     "prod": "webpack --mode production",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
-    "build": "webpack",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "cross-env webpack --config webpack.config.ts"
   },
   "repository": {
     "type": "git",
@@ -24,6 +22,11 @@
     "url": "https://github.com/Kilomaster3/crud-api-app/issues"
   },
   "homepage": "https://github.com/Kilomaster3/crud-api-app#readme",
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
+  },
   "devDependencies": {
     "@types/node": "^20.1.1",
     "nodemon": "^2.0.22",
