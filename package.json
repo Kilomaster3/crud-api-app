@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start:dev": "nodemon app.ts",
+    "start:prod": "webpack",
     "develop": "webpack-dev-server --mode development",
-    "prod": "webpack --mode production",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
-    "build": "cross-env webpack --config webpack.config.ts"
+    "build": "webpack --mode production",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
