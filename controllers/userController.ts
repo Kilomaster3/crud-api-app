@@ -45,11 +45,40 @@ export const createUser = async (req, res) => {
       hobbies,
     };
 
-    const newUser = await User.createUser(user);
+    const newUser = await User.createNewUser(user);
 
     res.writeHead(201, { 'Content-Type': 'application/json' });
 
     return res.end(JSON.stringify(newUser));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// @route PUT /api/users/:id
+export const updateUser = async (req, res, id) => {
+  try {
+    const user: PUser = await User.findById(id) as PUser;
+
+    if (!user) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'User not found' }));
+    } else {
+      const body = await getPostData(req);
+
+      const { username, age, hobbies } = JSON.parse(body as string);
+
+      const userData: PUser  = {
+        username: username || user.username ,
+        age: age || user.age,
+        hobbies: hobbies || user.hobbies
+      };
+
+      const updUser = await User.updateCurrentUser(id, userData);
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify(updUser));
+    }
   } catch (err) {
     console.log(err);
   }
