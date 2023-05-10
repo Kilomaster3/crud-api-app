@@ -1,6 +1,7 @@
 import * as User from '../models/userModel';
 import { PUser } from '../interfaces/user';
 import { getPostData } from '../utils/getPostData';
+import { validate as isValidUUID } from 'uuid';
 
 // @route GET /api/users
 export const getUsers = async (req, res) => {
@@ -19,12 +20,16 @@ export const getUserById = async (req, res, id) => {
   try {
     const user = await User.findById(id);
 
-    if (!user) {
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: 'User not found' }));
-    } else {
+    if (user && isValidUUID(id)) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify(user));
+    } else if (user && !isValidUUID(id)) {
+      console.log('id', id, isValidUUID(id));
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'User ID is invalid' }));
+    } else {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'User not found' }));
     }
   } catch (err) {
     console.log(err);
@@ -34,8 +39,7 @@ export const getUserById = async (req, res, id) => {
 // @route POST /api/users
 export const createUser = async (req, res) => {
   try {
-
-    const body = await getPostData(req);
+    const body: unknown = await getPostData(req);
 
     const { username, age, hobbies } = JSON.parse(body as string);
 
@@ -45,11 +49,19 @@ export const createUser = async (req, res) => {
       hobbies,
     };
 
-    const newUser = await User.createNewUser(user);
+    if (user.username && user.age && user.hobbies) {
+      const newUser = await User.createNewUser(user);
 
     res.writeHead(201, { 'Content-Type': 'application/json' });
+    res.writeHead(201, { 'Content-Type': 'application/json' });
 
-    return res.end(JSON.stringify(newUser));
+      res.writeHead(201, { 'Content-Type': 'application/json' });
+
+      return res.end(JSON.stringify(newUser));
+    } else {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'Please, fill required fields' }));
+    }
   } catch (err) {
     console.log(err);
   }
@@ -60,24 +72,27 @@ export const updateUser = async (req, res, id) => {
   try {
     const user: PUser = await User.findById(id) as PUser;
 
-    if (!user) {
-      res.writeHead(404, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: 'User not found' }));
-    } else {
+    if (user && isValidUUID(id)) {
       const body = await getPostData(req);
 
       const { username, age, hobbies } = JSON.parse(body as string);
 
-      const userData: PUser  = {
-        username: username || user.username ,
+      const userData: PUser = {
+        username: username || user.username,
         age: age || user.age,
-        hobbies: hobbies || user.hobbies
+        hobbies: hobbies || user.hobbies,
       };
 
       const updUser = await User.updateCurrentUser(id, userData);
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify(updUser));
+    } else if (user && !isValidUUID(id)) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'User ID is invalid' }));
+    } else {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'User not found' }));
     }
   } catch (err) {
     console.log(err);
@@ -89,15 +104,18 @@ export const deleteUser = async (req, res, id) => {
   try {
     const user = await User.findById(id);
 
-    if (!user) {
+    if (user && isValidUUID(id)) {
+      await User.removeUser(id);
+      res.writeHead(204, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: `User ${id} removed` }));
+    } else if (user && !isValidUUID(id)) {
+      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'User ID is invalid' }));
+    } else {
       res.writeHead(404, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ message: 'User not found' }));
-    } else {
-      await User.removeUser(id);
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ message: `User ${id} removed` }));
     }
   } catch (err) {
     console.log(err);
   }
-}
+};

@@ -8,6 +8,8 @@ import {
   deleteUser,
 } from './controllers/userController';
 
+import 'dotenv/config';
+
 const server = http.createServer((req, res) => {
   if (req.url === '/api/users' && req.method === 'GET') {
     getUsers(req, res);
@@ -28,6 +30,4 @@ const server = http.createServer((req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 4000;
-
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(process.env.PORT, () => console.log(`Server running on port ${process.env.PORT}`));
