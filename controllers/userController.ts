@@ -61,7 +61,7 @@ export const updateUser = async (req, res, id) => {
     const user: PUser = await User.findById(id) as PUser;
 
     if (!user) {
-      res.writeHead(400, { 'Content-Type': 'application/json' });
+      res.writeHead(404, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ message: 'User not found' }));
     } else {
       const body = await getPostData(req);
@@ -83,3 +83,21 @@ export const updateUser = async (req, res, id) => {
     console.log(err);
   }
 };
+
+// @route DELETE /api/users/:id
+export const deleteUser = async (req, res, id) => {
+  try {
+    const user = await User.findById(id);
+
+    if (!user) {
+      res.writeHead(404, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: 'User not found' }));
+    } else {
+      await User.removeUser(id);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ message: `User ${id} removed` }));
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}

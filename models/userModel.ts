@@ -35,3 +35,12 @@ export const updateCurrentUser = async (id: string, user: PUser) => {
     resolve(users[index]);
   });
 };
+
+export const removeUser = async (id: string) => {
+  return new Promise<void>((resolve, reject) => {
+    const deletedUser = users.filter((user) => user.id !== id);
+
+    writeDataToFile('./data/users.json', deletedUser);
+    resolve();
+  });
+};
