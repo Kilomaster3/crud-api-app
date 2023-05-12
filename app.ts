@@ -11,27 +11,30 @@ import {
 import 'dotenv/config';
 
 export const server = http.createServer((req, res) => {
+  const path = '/api/users';
+  const id = req.url.split('/')[3];
+
   try {
-    if (req.url === '/api/users' && req.method === 'GET') {
+    if (req.url === path && req.method === 'GET') {
       getUsers(req, res);
-    } else if (req.url.match(/\/api\/users\/\w+/) && req.method === 'GET') {
-      const id = req.url.split('/')[3];
-      getUserById(req, res, id);
-    } else if (req.url === '/api/users' && req.method === 'POST') {
+    } else if (req.url === path && req.method === 'POST') {
       createUser(req, res);
-    } else if (req.url.match(/\/api\/users\/\w+/) && req.method === 'PUT') {
-      const id = req.url.split('/')[3];
-      updateUser(req, res, id);
-    } else if (req.url.match(/\/api\/users\/\w+/) && req.method === 'DELETE') {
-      const id = req.url.split('/')[3];
-      deleteUser(req, res, id);
+    } else if (req.url.match(/\/api\/users\/\w+/)) {
+      if (req.method === 'GET') {
+        getUserById(req, res, id);
+      } else if (req.method === 'PUT') {
+        updateUser(req, res, id);
+      } else if (req.method === 'DELETE') {
+        deleteUser(req, res, id);
+      }
     } else {
       res.writeHead(404, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ message: 'Route not found' }));
     }
   } catch (err) {
     res.writeHead(500, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify({ message: 'No answer from server' }));
+    res.write(JSON.stringify({ message: 'No answer from server' }));
+    res.end();
   }
 });
 

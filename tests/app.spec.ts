@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { server } from './app';
-import { closeTestServer } from './tests/closeTestServer';
-import { PUser } from './interfaces/user';
+import { server } from '../app';
+import { closeTestServer } from './closeTestServer';
+import { PUser } from '../interfaces/user';
 
 let id: string;
 let user: PUser;
