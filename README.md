@@ -29,6 +29,7 @@ $ npm i
 ```sh
 $ npm run start:dev
 $ npm run start:prod
+$ npm run multi
 ```
 3. Run tests:
 

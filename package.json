@@ -6,6 +6,7 @@
   "scripts": {
     "start:dev": "nodemon app.ts",
     "start:prod": "cross-env NODE_ENV=production webpack --config webpack.config.ts",
+    "start:multi": "nodemon multi.ts",
     "develop": "webpack-dev-server --mode development",
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
