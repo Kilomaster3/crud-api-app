@@ -38,6 +38,7 @@ export const server = http.createServer((req, res) => {
   } catch (err) {
     res.writeHead(500, { 'Content-Type': 'application/json' });
     res.write(JSON.stringify({ message: 'No answer from server' }));
+    console.log(err);
     res.end();
   }
 });

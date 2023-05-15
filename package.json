@@ -11,7 +11,7 @@
     "lint": "eslint . --ext .ts",
     "lint-and-fix": "eslint . --ext .ts --fix",
     "build": "cross-env webpack --config webpack.config.ts",
-    "test": "cross-env NODE_ENV=test jest -c ./jest.config.json --forceExit",
+    "test": "cross-env NODE_ENV=test jest -c ./jest.config.json --forceExit --detectOpenHandles",
     "test:coverage": "jest --coverage -c ./jest.config.json"
   },
   "repository": {
